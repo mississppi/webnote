@@ -1,0 +1,57 @@
+button {
+    background: none;
+    border: none;
+    color: #08c;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.app-navi {
+    width: 35%;
+    height: 100vh;
+    border-right: 1px solid #ddd;
+}
+
+.app-navi-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+}
+
+.app-navi-header h1 {
+    margin: 0;
+}
+
+.app-navi-notes {
+    height: calc(100vh - 180px);
+    overflow-y: scroll;
+}
+
+.app-navi-note {
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.navi-note-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-navi-note p {
+    margin: 10px 0;
+}
+
+.app-navi-note small {
+    color: #999;
+}
+
+.app-navi-note:hover{
+    background-color: #f1f0f0;
+}
+
+.app-navi-note.active {
+    background-color: #fff;
+}
