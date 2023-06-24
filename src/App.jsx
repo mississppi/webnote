@@ -9,15 +9,13 @@ function App() {
   const [activeNote, setActiveNote] = useState(false);
   
   const onAddNote = () => {
-    console.log("add");
     const newNote = {
       id: uuid(), 
-      title: 'new',
-      content: 'content',
+      title: 'New Note',
+      content: '',
       modDate: Date.now(),
     };
     setNotes([...notes, newNote]);
-    console.log(newNote);
   }
 
   const onDeleteNote = (id) => {
@@ -27,7 +25,13 @@ function App() {
 
   return (
     <div className='App'>
-      <Navi onAddNote={onAddNote} notes={notes} onDeleteNote={onDeleteNote} activeNote={activeNote} setActiveNote={setActiveNote}/>
+      <Navi 
+        onAddNote={onAddNote} 
+        notes={notes} 
+        onDeleteNote={onDeleteNote} 
+        activeNote={activeNote} 
+        setActiveNote={setActiveNote}
+      />
       <Main />
     </div>
   )

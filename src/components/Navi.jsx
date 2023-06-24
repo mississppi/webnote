@@ -6,8 +6,8 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, setActiveNote}) => {
     return (
         <div className="app-navi">
             <div className="app-navi-header">
-                <h1>ノート</h1>
-                <button onClick={onAddNote}>追加</button>
+                <h1>のーと</h1>
+                <button onClick={onAddNote}>+ Add Note</button>
             </div>
             <div className="app-navi-notes">
                 {notes.map((note) => (
@@ -18,10 +18,13 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, setActiveNote}) => {
                     >
                         <div className="navi-note-title">
                             <strong>{note.title}</strong>
-                            <button onClick={() => onDeleteNote(note.id)}>削除</button>
+                            <button onClick={() => onDeleteNote(note.id)}>Delete</button>
                         </div>
                         <p>{note.content}</p>
-                        <small>{note.modDate}</small>
+                        <small>{ new Date(note.modDate).toLocaleDateString("ja-JP", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        }) }</small>
                     </div>
                 ))}
                 
