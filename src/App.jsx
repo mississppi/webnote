@@ -1,45 +1,22 @@
-import { useState } from 'react'
 import './App.css'
-import Navi from './components/Navi'
-import Main from './components/Main'
-import uuid from 'react-uuid'
+import Home from "./components/Home"
+import Login from "./components/Login"
+import { BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 
 function App() {
-  const [notes, setNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState(false);
-  
-  const onAddNote = () => {
-    const newNote = {
-      id: uuid(), 
-      title: 'New Note',
-      content: '',
-      modDate: Date.now(),
-    };
-    setNotes([...notes, newNote]);
-  }
-
-  const onDeleteNote = (id) => {
-    const filterNotes = notes.filter((note) => note.id !== id);
-    setNotes(filterNotes);
-  }
-
-  const getActiveNote = () => {
-    return notes.find((note) => note.id === activeNote);
+  const isLoggedIn = () => {
+    const isLoggedIn = localStorage.getItem('isAuth');
+    return isLoggedIn === 'true';
   }
 
   return (
-    <div className='App'>
-      <Navi 
-        onAddNote={onAddNote} 
-        notes={notes} 
-        onDeleteNote={onDeleteNote} 
-        activeNote={activeNote} 
-        setActiveNote={setActiveNote}
-      />
-      <Main 
-        activeNote={getActiveNote()}
-      />
-    </div>
+    <Router >
+      <Routes>
+        <Route path="/" element={isLoggedIn() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </Router>
   )
 }
 
