@@ -1,43 +1,36 @@
 import React, { useEffect, useState } from 'react'
+import "./Home.css";
 import Navi from './Navi'
 import Main from './Main'
 import uuid from 'react-uuid'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import {doc, addDoc, collection, deleteDoc, getDocs, query, where} from "firebase/firestore"
-import {db} from "../firebase"
-import "./Home.css";
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useAuthContext } from '../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 const Home = () => {
-  const [user, setUser] = useState(null);
+  const { user } = useAuthContext();
   const [notes, setNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user.email);
-        setUser(user);
-        fetchNoteList(user.email);
-      } else {
-
+    if (user) {
+      const fetchNotes = async () => {
+        try{
+          const q = query(collection(db, "notes"), where("userEmail", "==", user.email));
+          const querySnapshot = await getDocs(q); 
+          const notesArray = querySnapshot.docs.map((doc) => {
+            return doc.data();
+          })
+          setNotes(notesArray);
+        } catch(error) {
+          console.log(error);
+        }
       }
-    });
-
-    return () => {
-      unsubscribe();
+      fetchNotes();
     }
-  },[]);
-
-  const fetchNoteList = async(userEmail) => {
-    try{
-      const q = query(collection(db, "notes"), where("userEmail", "==", userEmail));
-      const querySnapshot = await getDocs(q);
-      const notes = querySnapshot.docs.map((doc) => doc.data());
-      setNotes(notes);
-    } catch(error) {
-      console.log(error);
-    }
-  }
+  },[user]);
 
   const onAddNote = async () => {
     try {
@@ -46,31 +39,32 @@ const Home = () => {
         title: 'New Note',
         content: '',
         modDate: Date.now(),
+        userEmail: user.email,
       };
-      const user = auth.currentUser;
-      if (user) {
-        const newNoteWithUserData = {
-          ...newNote,
-          userEmail: user.email,
-        }
-        const docRef = await addDoc(collection(db, "notes"), newNoteWithUserData);
-        setNotes([...notes, newNote]);
-      } else {
-        console.log("ログインされていません");
-      }
+      const docRef = await addDoc(collection(db, "notes"), newNote);
+      setNotes([...notes, newNote]);
     } catch(error) {
       console.log(error);
     }
   }
 
   const onDeleteNote = async (id) => {
-    
     try {
-      await deleteDoc(doc(db, "notes", id));
+      const q = query(collection(db, "notes"), where("id", "==", id));
+      const querySnapshot = await getDocs(q);
+      const doc_id = querySnapshot.docs.map((doc) => {
+        return doc.id;
+      })
+      await deleteDoc(doc(db, 'notes', doc_id[0])).
+      then(() => {  
+        console.log("deleted");
+      }).
+      catch((error) => {
+        console.log(error);
+      });
       const filterNotes = notes.filter((note) => note.id !== id);
       setNotes(filterNotes);
     } catch(error) {
-      console.log("削除に失敗しました");
       console.log(error);
     }
   }
@@ -79,20 +73,24 @@ const Home = () => {
     return notes.find((note) => note.id === activeNote);
   }
 
-  return (
-    <div className="Home">
-      <Navi 
-        onAddNote={onAddNote} 
-        notes={notes} 
-        onDeleteNote={onDeleteNote} 
-        activeNote={activeNote} 
-        setActiveNote={setActiveNote}
-      />
-      <Main 
-        activeNote={getActiveNote()}
-      />
-    </div>
-  )
+  if(!user) {
+    navigate("/login");
+  } else {
+    return (
+      <div className="Home">
+        <Navi 
+          onAddNote={onAddNote} 
+          notes={notes} 
+          onDeleteNote={onDeleteNote} 
+          activeNote={activeNote} 
+          setActiveNote={setActiveNote}
+        />
+        <Main 
+          activeNote={getActiveNote()}
+        />
+      </div>
+    )
+  }
 }
 
 export default Home

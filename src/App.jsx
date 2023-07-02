@@ -1,22 +1,19 @@
 import './App.css'
 import Home from "./components/Home"
 import Login from "./components/Login"
-import { BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
+import { AuthProvider  } from './auth/AuthContext';
 
 function App() {
-  const isLoggedIn = () => {
-    const isLoggedIn = localStorage.getItem('isAuth');
-    return isLoggedIn === 'true';
-  }
-
   return (
-    <Router >
-      <Routes>
-        <Route path="/" element={isLoggedIn() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router >
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 
