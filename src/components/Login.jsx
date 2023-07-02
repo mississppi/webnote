@@ -10,8 +10,7 @@ const Login = ({ setIsAuth }) => {
     const LoginInWithGoogle = () => {
         //google login
         signInWithPopup(auth, provider).then((result) => {
-            localStorage.setItem("isAuth", true);
-            navigate("/home");
+            navigate("/");
         });
     }
 
