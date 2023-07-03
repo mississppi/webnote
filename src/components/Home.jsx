@@ -37,7 +37,7 @@ const Home = () => {
       const newNote = {
         id: uuid(), 
         title: 'New Note',
-        content: '',
+        content: 'content',
         modDate: Date.now(),
         userEmail: user.email,
       };
@@ -87,6 +87,8 @@ const Home = () => {
         />
         <Main 
           activeNote={getActiveNote()}
+          setActivenNote={setActiveNote}
+          onUpdateNote={onUpdateNote}
         />
       </div>
     )
