@@ -88,7 +88,6 @@ const Home = () => {
         <Main 
           activeNote={getActiveNote()}
           setActivenNote={setActiveNote}
-          onUpdateNote={onUpdateNote}
         />
       </div>
     )

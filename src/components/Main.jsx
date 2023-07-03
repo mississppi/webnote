@@ -4,7 +4,7 @@ import './Main.css'
 import { doc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-const Main = ({activeNote, setActivenNote, onUpdateNote}) => {
+const Main = ({activeNote, setActivenNote}) => {
   const [isTitleChanged, setIsTitleChanged] = useState(false);
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
