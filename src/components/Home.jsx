@@ -83,6 +83,21 @@ const Home = () => {
       };
       await updateDoc(documentRef, updatedNote);
       console.log("更新完了");
+
+      const fetchNotes = async () => {
+        try{
+          const q = query(collection(db, "notes"), where("userEmail", "==", user.email));
+          const querySnapshot = await getDocs(q); 
+          const notesArray = querySnapshot.docs.map((doc) => {
+            return doc.data();
+          })
+          setNotes(notesArray);
+        } catch(error) {
+          console.log(error);
+        }
+      }
+      fetchNotes();
+      // setNotes();
     } catch(error) {
       console.log(error);
     }
