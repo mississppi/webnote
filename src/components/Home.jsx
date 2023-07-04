@@ -18,11 +18,7 @@ const Home = () => {
     if (user) {
       const fetchNotes = async () => {
         try{
-          const q = query(collection(db, "notes"), where("userEmail", "==", user.email));
-          const querySnapshot = await getDocs(q); 
-          const notesArray = querySnapshot.docs.map((doc) => {
-            return doc.data();
-          })
+          const notesArray = await fetchNotesByEmail(user.email);
           setNotes(notesArray);
         } catch(error) {
           console.log(error);
@@ -31,6 +27,24 @@ const Home = () => {
       fetchNotes();
     }
   },[user]);
+
+  const fetchDocumentId = async (id) => {
+    const q = query(collection(db, "notes"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+    const doc_id = querySnapshot.docs.map((doc) => {
+      return doc.id;
+    })
+    return doc_id;
+  }
+
+  const fetchNotesByEmail = async (email) => {
+    const q = query(collection(db, "notes"), where("userEmail", "==", email));
+    const querySnapshot = await getDocs(q); 
+    const notesArray = querySnapshot.docs.map((doc) => {
+      return doc.data();
+    })
+    return notesArray;
+  }
 
   const onAddNote = async () => {
     try {
@@ -50,11 +64,7 @@ const Home = () => {
 
   const onDeleteNote = async (id) => {
     try {
-      const q = query(collection(db, "notes"), where("id", "==", id));
-      const querySnapshot = await getDocs(q);
-      const doc_id = querySnapshot.docs.map((doc) => {
-        return doc.id;
-      })
+      const doc_id = await fetchDocumentId(id);
       await deleteDoc(doc(db, 'notes', doc_id[0])).
       then(() => {
         console.log("deleted");
@@ -71,33 +81,17 @@ const Home = () => {
 
   const onUpdateNote = async () => {
     try {
-      const q = query(collection(db, "notes"), where("id", "==", activeNote.id));
-      const querySnapshot = await getDocs(q);
-      const doc_id = querySnapshot.docs.map((doc) => {
-        return doc.id;
-      });
+      const doc_id = await fetchDocumentId(activeNote.id);
       const documentRef = doc(db, 'notes', doc_id[0]);
       const updatedNote = { 
         title: activeNote.title,
         content: activeNote.content,
       };
       await updateDoc(documentRef, updatedNote);
-      console.log("更新完了");
 
-      const fetchNotes = async () => {
-        try{
-          const q = query(collection(db, "notes"), where("userEmail", "==", user.email));
-          const querySnapshot = await getDocs(q); 
-          const notesArray = querySnapshot.docs.map((doc) => {
-            return doc.data();
-          })
-          setNotes(notesArray);
-        } catch(error) {
-          console.log(error);
-        }
-      }
-      fetchNotes();
-      // setNotes();
+      const notesArray = await fetchNotesByEmail(user.email);
+      setNotes(notesArray);
+      
     } catch(error) {
       console.log(error);
     }
