@@ -56,7 +56,7 @@ const Home = () => {
         return doc.id;
       })
       await deleteDoc(doc(db, 'notes', doc_id[0])).
-      then(() => {  
+      then(() => {
         console.log("deleted");
       }).
       catch((error) => {

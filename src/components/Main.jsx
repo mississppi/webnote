@@ -33,8 +33,6 @@ const Main = ({activeNote, setActivenNote}) => {
         content: isContentChanged ? editedContent : activeNote.content,
       };
       await updateDoc(documentRef, updatedNote);
-      console.log("更新が完了しました");
-
     } catch(error) {
       console.log(error);
     }
@@ -49,13 +47,11 @@ const Main = ({activeNote, setActivenNote}) => {
         <input 
           id="title"
           type="text" 
-          // value={editedTitle ?? activeNote.title}
           defaultValue={activeNote.title}
           onChange={handleTitleChange}
         />
         <textarea 
           id="content"
-          // value={activeNote.content}
           defaultValue={activeNote.content}
           onChange={handleContentChange}
         />
