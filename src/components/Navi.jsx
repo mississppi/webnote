@@ -5,7 +5,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useAuthContext } from '../auth/AuthContext';
 
-const Navi = ({onAddNote, notes, onDeleteNote, activeNote, setActiveNote}) => {
+const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -28,7 +28,7 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, setActiveNote}) => {
                     <div 
                         className={`app-navi-note ${note.id === activeNote && "active"}`}
                         key={note.id}
-                        onClick={() => setActiveNote(note.id)}
+                        onClick={() => onActiveNote(note)}
                     >
                         <div className="navi-note-title">
                             <strong>{note.title}</strong>

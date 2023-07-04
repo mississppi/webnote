@@ -4,14 +4,14 @@ import Navi from './Navi'
 import Main from './Main'
 import uuid from 'react-uuid'
 import { auth, db } from '../firebase'
-import {doc, addDoc, collection, deleteDoc, getDocs, query, where} from "firebase/firestore"
+import {doc, addDoc, collection, deleteDoc, getDocs, query, where, updateDoc} from "firebase/firestore"
 import { useAuthContext } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const { user } = useAuthContext();
   const [notes, setNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState(false);
+  const [activeNote, setActiveNote] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -69,8 +69,41 @@ const Home = () => {
     }
   }
 
-  const getActiveNote = () => {
-    return notes.find((note) => note.id === activeNote);
+  const onUpdateNote = async () => {
+    try {
+      const q = query(collection(db, "notes"), where("id", "==", activeNote.id));
+      const querySnapshot = await getDocs(q);
+      const doc_id = querySnapshot.docs.map((doc) => {
+        return doc.id;
+      });
+      const documentRef = doc(db, 'notes', doc_id[0]);
+      const updatedNote = { 
+        title: activeNote.title,
+        content: activeNote.content,
+      };
+      await updateDoc(documentRef, updatedNote);
+      console.log("更新完了");
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  const handleNoteActive = (note) => {
+    setActiveNote(note);
+  }
+
+  const handleInputChange = (e) => {
+    setActiveNote({
+      ...activeNote, 
+      title: e.target.value
+    })
+  }
+
+  const handleTextAreaChange = (e) => {
+    setActiveNote({
+      ...activeNote, 
+      content: e.target.value
+    })
   }
 
   if(!user) {
@@ -83,11 +116,13 @@ const Home = () => {
           notes={notes} 
           onDeleteNote={onDeleteNote} 
           activeNote={activeNote} 
-          setActiveNote={setActiveNote}
+          onActiveNote={handleNoteActive}
         />
         <Main 
-          activeNote={getActiveNote()}
-          setActivenNote={setActiveNote}
+          activeNote={activeNote}
+          onInputChange={handleInputChange}
+          onTextAreaChange={handleTextAreaChange}
+          onUpdateNote={onUpdateNote}
         />
       </div>
     )

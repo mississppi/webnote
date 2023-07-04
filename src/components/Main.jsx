@@ -1,42 +1,8 @@
 import React, { useState } from 'react'
 import {useKey} from 'react-use';
 import './Main.css'
-import { doc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
 
-const Main = ({activeNote, setActivenNote}) => {
-  const [isTitleChanged, setIsTitleChanged] = useState(false);
-  const [isContentChanged, setIsContentChanged] = useState(false);
-  const [editedTitle, setEditedTitle] = useState("");
-  const [editedContent, setEditedContent] = useState("");
-
-  const handleTitleChange = (event) => {
-    setEditedTitle(event.target.value);
-    setIsTitleChanged(true);
-  }
-
-  const handleContentChange = (event) => {
-    setEditedContent(event.target.value);
-    setIsContentChanged(true);
-  }
-
-  const handleUpdate = async () => {
-    try {
-      const q = query(collection(db, "notes"), where("id", "==", activeNote.id));
-      const querySnapshot = await getDocs(q);
-      const doc_id = querySnapshot.docs.map((doc) => {
-        return doc.id;
-      });
-      const documentRef = doc(db, 'notes', doc_id[0]);
-      const updatedNote = { 
-        title: isTitleChanged ? editedTitle : activeNote.title,
-        content: isContentChanged ? editedContent : activeNote.content,
-      };
-      await updateDoc(documentRef, updatedNote);
-    } catch(error) {
-      console.log(error);
-    }
-  }
+const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote}) => {
 
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
@@ -47,15 +13,15 @@ const Main = ({activeNote, setActivenNote}) => {
         <input 
           id="title"
           type="text" 
-          defaultValue={activeNote.title}
-          onChange={handleTitleChange}
+          value={activeNote?.title || ""}
+          onChange={onInputChange}
         />
         <textarea 
           id="content"
-          defaultValue={activeNote.content}
-          onChange={handleContentChange}
+          value={activeNote?.content || ""}
+          onChange={onTextAreaChange}
         />
-        <button onClick={handleUpdate}>Save</button>
+        <button onClick={onUpdateNote}>Save</button>
       </div>
     </div>
   )
