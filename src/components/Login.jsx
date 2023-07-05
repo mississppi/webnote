@@ -31,8 +31,8 @@ const Login = ({ setIsAuth }) => {
     <div className="app-login-container">
         <div className="app-login">
             <h2>ノート</h2>
-            <button onClick={LoginInWithAnonymous}>テスト用でログイン</button>
             <button onClick={LoginInWithGoogle}><img src={btn_google} /></button>
+            <button className="anonymous-login" onClick={LoginInWithAnonymous}>テストでログイン</button>
         </div>
     </div>
   )

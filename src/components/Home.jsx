@@ -98,7 +98,7 @@ const Home = () => {
       };
       await updateDoc(documentRef, updatedNote);
 
-      const notesArray = await fetchNotesByEmail(user.email);
+      const notesArray = await fetchNotesByEmail(user.email ?? localStorage.getItem("anonLoginKey"));
       setNotes(notesArray);
       
     } catch(error) {
