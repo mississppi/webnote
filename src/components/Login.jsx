@@ -1,4 +1,4 @@
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, signInAnonymously } from 'firebase/auth'
 import React from 'react'
 import { auth, provider } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -14,10 +14,24 @@ const Login = ({ setIsAuth }) => {
         });
     }
 
+    const LoginInWithAnonymous = () => {
+        signInAnonymously(auth)
+        .then((userCredential) => {
+            localStorage.setItem('anonLoginKey', 'hogehoge@gmail.com');
+            const user = userCredential.user;
+            navigate("/");
+        })
+        .catch((error) => {
+            // エラーハンドリング
+            console.log('匿名ログインエラー', error);
+        });
+    }
+
   return (
     <div className="app-login-container">
         <div className="app-login">
             <h2>ノート</h2>
+            <button onClick={LoginInWithAnonymous}>テスト用でログイン</button>
             <button onClick={LoginInWithGoogle}><img src={btn_google} /></button>
         </div>
     </div>

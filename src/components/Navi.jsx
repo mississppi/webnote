@@ -10,6 +10,7 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
     const navigate = useNavigate();
     const handleLogout = () => {
         signOut(auth).then(() => {
+            localStorage.removeItem('anonLoginKey');
             navigate("/login");
         }).catch((error) => {
             console.log(error);
