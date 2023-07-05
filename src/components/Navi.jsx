@@ -6,22 +6,10 @@ import { signOut } from 'firebase/auth';
 import { useAuthContext } from '../auth/AuthContext';
 
 const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
-    const { user } = useAuthContext();
-    const navigate = useNavigate();
-    const handleLogout = () => {
-        signOut(auth).then(() => {
-            localStorage.removeItem('anonLoginKey');
-            navigate("/login");
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
     return (
         <div className="app-navi">
             <div className="app-navi-header">
                 <h1>note</h1>
-                <button onClick={handleLogout}>ログアウト</button>
                 <button onClick={onAddNote}>+ Add Note</button>
             </div>
             <div className="app-navi-notes">

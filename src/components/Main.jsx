@@ -2,13 +2,17 @@ import React, { useState } from 'react'
 import {useKey} from 'react-use';
 import './Main.css'
 
-const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote}) => {
+const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout}) => {
 
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
   }
   return (
     <div className="app-main">
+      <div className="app-main-header">
+        <button>ダークモード</button>
+        <button onClick={logout}>Logout</button>
+      </div>
       <div className="app-main-note-edit">
         <input 
           id="title"
