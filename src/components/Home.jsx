@@ -7,6 +7,7 @@ import { auth, db } from '../firebase'
 import {doc, addDoc, collection, deleteDoc, getDocs, query, where, updateDoc} from "firebase/firestore"
 import { useAuthContext } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
 
 const Home = () => {
   const { user } = useAuthContext();
@@ -124,6 +125,15 @@ const Home = () => {
     })
   }
 
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      localStorage.removeItem('anonLoginKey');
+      navigate("/login");
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   if(!user) {
     navigate("/login");
   } else {
@@ -141,6 +151,7 @@ const Home = () => {
           onInputChange={handleInputChange}
           onTextAreaChange={handleTextAreaChange}
           onUpdateNote={onUpdateNote}
+          logout={handleLogout}
         />
       </div>
     )

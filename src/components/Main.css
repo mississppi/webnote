@@ -3,9 +3,20 @@
     height: 100vh;
 }
 
+.app-main-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    padding-top: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+    height: 10vh;
+}
+
 .app-main-note-edit {
-    padding: 25px;
-    height: 750vh;
+    padding: 10px 25px 25px;
+    height: 90vh;
 }
 
 .app-main-note-edit input, textarea {
