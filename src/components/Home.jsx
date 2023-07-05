@@ -19,6 +19,9 @@ const Home = () => {
       const fetchNotes = async () => {
         try{
           const notesArray = await fetchNotesByEmail(user.email);
+          if(notesArray.length != 0){
+            setActiveNote(notesArray[0]);
+          }
           setNotes(notesArray);
         } catch(error) {
           console.log(error);
@@ -68,12 +71,18 @@ const Home = () => {
       await deleteDoc(doc(db, 'notes', doc_id[0])).
       then(() => {
         console.log("deleted");
+        const filterNotes = notes.filter((note) => note.id !== id);
+        if(filterNotes.length != 0){
+          setActiveNote(filterNotes[0]);
+        } else {
+          setActiveNote(null);
+        }
+        setNotes(filterNotes);
       }).
       catch((error) => {
         console.log(error);
       });
-      const filterNotes = notes.filter((note) => note.id !== id);
-      setNotes(filterNotes);
+
     } catch(error) {
       console.log(error);
     }
