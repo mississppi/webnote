@@ -18,7 +18,7 @@ const Home = () => {
     if (user) {
       const fetchNotes = async () => {
         try{
-          const notesArray = await fetchNotesByEmail(user.email);
+          const notesArray = await fetchNotesByEmail(user.email ?? localStorage.getItem("anonLoginKey"));
           if(notesArray.length != 0){
             setActiveNote(notesArray[0]);
           }
@@ -56,7 +56,7 @@ const Home = () => {
         title: 'New Note',
         content: 'content',
         modDate: Date.now(),
-        userEmail: user.email,
+        userEmail: user.email ?? localStorage.getItem("anonLoginKey"),
       };
       const docRef = await addDoc(collection(db, "notes"), newNote);
       setNotes([...notes, newNote]);
@@ -98,7 +98,7 @@ const Home = () => {
       };
       await updateDoc(documentRef, updatedNote);
 
-      const notesArray = await fetchNotesByEmail(user.email);
+      const notesArray = await fetchNotesByEmail(user.email ?? localStorage.getItem("anonLoginKey"));
       setNotes(notesArray);
       
     } catch(error) {

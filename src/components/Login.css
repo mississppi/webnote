@@ -9,3 +9,23 @@
 .app-login {
     text-align: center;
 }
+
+.anonymous-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 191px;
+    height: 46px;
+    margin:0 auto;
+    padding: .9em 2em;
+    border: none;
+    border-radius: 5px;
+    background-color: #7ad025;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.anonymous-login {
+    background-color: #6ac015;
+}
