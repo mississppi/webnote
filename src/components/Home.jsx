@@ -19,6 +19,9 @@ const Home = () => {
       const fetchNotes = async () => {
         try{
           const notesArray = await fetchNotesByEmail(user.email);
+          if(notesArray.length != 0){
+            setActiveNote(notesArray[0]);
+          }
           setNotes(notesArray);
         } catch(error) {
           console.log(error);
