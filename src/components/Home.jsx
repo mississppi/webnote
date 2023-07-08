@@ -19,7 +19,7 @@ const Home = () => {
     if (user) {
       const fetchNotes = async () => {
         try{
-          const notesArray = await fetchNotesByEmail(user.email ?? localStorage.getItem("anonLoginKey"));
+          const notesArray = await fetchNotesByUid(user.uid);
           if(notesArray.length != 0){
             setActiveNote(notesArray[0]);
           }
@@ -41,8 +41,8 @@ const Home = () => {
     return doc_id;
   }
 
-  const fetchNotesByEmail = async (email) => {
-    const q = query(collection(db, "notes"), where("userEmail", "==", email));
+  const fetchNotesByUid = async (uid) => {
+    const q = query(collection(db, "notes"), where("uid", "==", uid));
     const querySnapshot = await getDocs(q); 
     const notesArray = querySnapshot.docs.map((doc) => {
       return doc.data();
@@ -57,7 +57,7 @@ const Home = () => {
         title: 'New Note',
         content: 'content',
         modDate: Date.now(),
-        userEmail: user.email ?? localStorage.getItem("anonLoginKey"),
+        uid: user.uid,
       };
       const docRef = await addDoc(collection(db, "notes"), newNote);
       setNotes([...notes, newNote]);
@@ -98,10 +98,8 @@ const Home = () => {
         content: activeNote.content,
       };
       await updateDoc(documentRef, updatedNote);
-
-      const notesArray = await fetchNotesByEmail(user.email ?? localStorage.getItem("anonLoginKey"));
+      const notesArray = await fetchNotesByUid(user.uid);
       setNotes(notesArray);
-      
     } catch(error) {
       console.log(error);
     }
@@ -127,7 +125,6 @@ const Home = () => {
 
   const handleLogout = () => {
     signOut(auth).then(() => {
-      localStorage.removeItem('anonLoginKey');
       navigate("/login");
     }).catch((error) => {
       console.log(error);
