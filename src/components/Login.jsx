@@ -17,7 +17,6 @@ const Login = ({ setIsAuth }) => {
     const LoginInWithAnonymous = () => {
         signInAnonymously(auth)
         .then((userCredential) => {
-            localStorage.setItem('anonLoginKey', 'hogehoge@gmail.com');
             const user = userCredential.user;
             navigate("/");
         })
