@@ -6,6 +6,15 @@ import './Main.css'
 
 const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout, isDarkMode, handleModeToggle}) => {
 
+  const handleSave = () => {
+    event.preventDefault();
+    if(activeNote){
+      onUpdateNote();
+    }
+  }
+  const saveKey = (event) => event.key === 's' && event.metaKey;
+  useKey(saveKey, handleSave);
+
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
   }
