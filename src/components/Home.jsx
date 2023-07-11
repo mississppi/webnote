@@ -13,6 +13,8 @@ const Home = () => {
   const { user } = useAuthContext();
   const [notes, setNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(JSON.parse(localStorage.getItem('isDarkMode')));
+
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -31,6 +33,11 @@ const Home = () => {
       fetchNotes();
     }
   },[user]);
+
+  const handleModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem('isDarkMode', JSON.stringify(!isDarkMode));
+  }
 
   const fetchDocumentId = async (id) => {
     const q = query(collection(db, "notes"), where("id", "==", id));
@@ -135,7 +142,7 @@ const Home = () => {
     navigate("/login");
   } else {
     return (
-      <div className="Home">
+      <div className={`Home ${isDarkMode ? "darkmode" : ""}`}>
         <Navi 
           onAddNote={onAddNote} 
           notes={notes} 
@@ -149,6 +156,8 @@ const Home = () => {
           onTextAreaChange={handleTextAreaChange}
           onUpdateNote={onUpdateNote}
           logout={handleLogout}
+          isDarkMode={isDarkMode}
+          handleModeToggle={handleModeToggle}
         />
       </div>
     )
