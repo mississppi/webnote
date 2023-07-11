@@ -49,7 +49,7 @@ button {
 }
 
 .app-navi-note:hover{
-    background-color: #f1f0f0;
+    /* background-color: #f1f0f0; */
 }
 
 .app-navi-note.active {
