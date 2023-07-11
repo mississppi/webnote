@@ -1,16 +1,14 @@
 import React from 'react'
 import './Navi.css';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { signOut } from 'firebase/auth';
-import { useAuthContext } from '../auth/AuthContext';
 
 const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
     return (
         <div className="app-navi">
             <div className="app-navi-header">
                 <h1>note</h1>
-                <button onClick={onAddNote}>+ Add Note</button>
+                <button onClick={onAddNote}>
+                    + Add Note
+                </button>
             </div>
             <div className="app-navi-notes">
                 {notes.map((note) => (
