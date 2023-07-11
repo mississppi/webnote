@@ -21,8 +21,6 @@
 
 .app-main-note-edit input, textarea {
     display: block;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     margin-bottom: 20px;
     width: 100%;
     height: calc(75vh - 130px);
@@ -32,13 +30,7 @@
     font-family: "Noto Sans Japanese", sans-serif;
 }
 
-input {
-    color: #444444;
-}
 
-textarea {
-    color: #444444;
-}
 
 .app-main-note-edit input:focus {
     outline:0;
@@ -62,7 +54,27 @@ textarea {
     color: #999;
 }
 
-.darkmode {
+input {
+    background-color: #f8f7f1;
+    border: none;
+    color: #444444;
+}
+
+textarea {
+    background-color: #f8f7f1;
+    border: solid 1px #BBBBBB;
+    border-radius: 5px;
+    color: #444444;
+}
+
+input.darkmode {
     background-color: #23282F;
+    color: #E6E6E6;
+    border: none;
+}
+
+textarea.darkmode {
+    background-color: #23282F;
+    border: solid 1px #555555;
     color: #E6E6E6;
 }

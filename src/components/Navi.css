@@ -9,9 +9,9 @@ button {
 }
 
 .app-navi {
-    width: 35%;
+    width: 30%;
     height: 100vh;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #BBBBBB;
 }
 
 .app-navi-header {
@@ -49,7 +49,7 @@ button {
 }
 
 .app-navi-note:hover{
-    /* background-color: #f1f0f0; */
+    /* background-color: #E5EAEE; */
 }
 
 .app-navi-note.active {
