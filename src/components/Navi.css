@@ -55,3 +55,7 @@ button {
 .app-navi-note.active {
     background-color: #fff;
 }
+
+.save {
+    font-family: 'Walter Turncoat', cursive;
+}

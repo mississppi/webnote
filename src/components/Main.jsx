@@ -45,7 +45,11 @@ const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout
           value={activeNote?.content || ""}
           onChange={onTextAreaChange}
         />
-        <button onClick={onUpdateNote}>Save</button>
+        <div className='app-main-help'>
+          <span className='save'>SAVE = ⌘ + s</span>
+        </div>
+
+        {/* <button onClick={onUpdateNote}>Save</button> */}
       </div>
     </div>
   )

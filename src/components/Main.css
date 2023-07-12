@@ -78,3 +78,12 @@ textarea.darkmode {
     border: solid 1px #555555;
     color: #E6E6E6;
 }
+
+.app-main-help{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save {
+    font-family: 'Walter Turncoat', cursive;
+}

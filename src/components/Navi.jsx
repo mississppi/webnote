@@ -6,9 +6,12 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
         <div className="app-navi">
             <div className="app-navi-header">
                 <h1>note</h1>
-                <button onClick={onAddNote}>
-                    + Add Note
-                </button>
+                {/* <button  onClick={onAddNote}>
+                    ADD = command + n
+                </button> */}
+                <span className="save">
+                    ADD = ⌘ + n
+                </span>
             </div>
             <div className="app-navi-notes">
                 {notes.map((note) => (
