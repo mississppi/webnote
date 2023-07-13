@@ -4,7 +4,7 @@ import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
 import {useKey} from 'react-use';
 import './Main.css'
 
-const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout, isDarkMode, handleModeToggle}) => {
+const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout, isDarkMode, handleModeToggle, handleTitleFocus, handleTitleBlur}) => {
 
   const handleSave = () => {
     event.preventDefault();
@@ -38,6 +38,7 @@ const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout
           type="text" 
           value={activeNote?.title || ""}
           onChange={onInputChange}
+          onFocus={handleTitleFocus} onBlur={handleTitleBlur}
         />
         <textarea 
           id="content"

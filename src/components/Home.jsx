@@ -162,6 +162,7 @@ const Home = () => {
           onDeleteNote={onDeleteNote} 
           activeNote={activeNote} 
           onActiveNote={handleNoteActive}
+
         />
         <Main 
           activeNote={activeNote}
