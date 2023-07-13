@@ -6,9 +6,9 @@ const Navi = ({onAddNote, notes, onDeleteNote, activeNote, onActiveNote}) => {
         <div className="app-navi">
             <div className="app-navi-header">
                 <h1>note</h1>
-                {/* <button  onClick={onAddNote}>
+                <button  onClick={onAddNote}>
                     ADD = command + n
-                </button> */}
+                </button>
                 <span className="save">
                     ADD = ⌘ + n
                 </span>

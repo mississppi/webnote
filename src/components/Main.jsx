@@ -48,8 +48,6 @@ const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
         </div>
-
-        {/* <button onClick={onUpdateNote}>Save</button> */}
       </div>
     </div>
   )
