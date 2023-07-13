@@ -4,7 +4,16 @@ import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
 import {useKey} from 'react-use';
 import './Main.css'
 
-const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout, isDarkMode, handleModeToggle}) => {
+const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout, isDarkMode, handleModeToggle, handleTitleFocus, handleTitleBlur}) => {
+
+  const handleSave = () => {
+    event.preventDefault();
+    if(activeNote){
+      onUpdateNote();
+    }
+  }
+  const saveKey = (event) => event.key === 's' && event.metaKey;
+  useKey(saveKey, handleSave);
 
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
@@ -29,6 +38,7 @@ const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout
           type="text" 
           value={activeNote?.title || ""}
           onChange={onInputChange}
+          onFocus={handleTitleFocus} onBlur={handleTitleBlur}
         />
         <textarea 
           id="content"
@@ -36,7 +46,9 @@ const Main = ({activeNote, onInputChange, onTextAreaChange, onUpdateNote, logout
           value={activeNote?.content || ""}
           onChange={onTextAreaChange}
         />
-        <button onClick={onUpdateNote}>Save</button>
+        <div className='app-main-help'>
+          <span className='save'>SAVE = ⌘ + s</span>
+        </div>
       </div>
     </div>
   )

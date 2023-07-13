@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import "./Home.css";
 import Navi from './Navi'
 import Main from './Main'
-import uuid from 'react-uuid'
+import uuid from 'react-uuid';
+import Notification from './Notification';
 import { auth, db } from '../firebase'
 import {doc, addDoc, collection, deleteDoc, getDocs, query, where, updateDoc} from "firebase/firestore"
 import { useAuthContext } from '../auth/AuthContext';
@@ -14,6 +15,9 @@ const Home = () => {
   const [notes, setNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(JSON.parse(localStorage.getItem('isDarkMode')));
+  const [isVisible, setIsVisible] = useState(false);
+  const [viewToggle, setViewToggle] = useState(false);
+  const [showState, setShowState] = useState(false);
 
   const navigate = useNavigate();
   
@@ -59,6 +63,15 @@ const Home = () => {
 
   const onAddNote = async () => {
     try {
+      if(user.email == null){
+        if(notes.length == 3){
+          setShowState(true)
+          setTimeout(() => {
+            setShowState(false);
+          }, 3000);
+          return;
+        }
+      }
       const newNote = {
         id: uuid(), 
         title: 'New Note',
@@ -149,6 +162,7 @@ const Home = () => {
           onDeleteNote={onDeleteNote} 
           activeNote={activeNote} 
           onActiveNote={handleNoteActive}
+
         />
         <Main 
           activeNote={activeNote}
@@ -159,6 +173,7 @@ const Home = () => {
           isDarkMode={isDarkMode}
           handleModeToggle={handleModeToggle}
         />
+        {showState &&  <Notification message="3つまで!" isVisible={isVisible} setIsVisible={setIsVisible}/>}
       </div>
     )
   }

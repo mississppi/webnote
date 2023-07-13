@@ -55,3 +55,15 @@ button {
 .app-navi-note.active {
     background-color: #fff;
 }
+
+.save .btn-add .btn-delete{
+    font-family: 'Walter Turncoat', cursive;
+}
+
+.btn-add{
+    font-family: 'Walter Turncoat', cursive;
+}
+
+.btn-delete{
+    font-family: 'Walter Turncoat', cursive;
+}
