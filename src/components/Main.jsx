@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
 import {useKey} from 'react-use';
 import './Main.css'
+import Header from './Header';
 
 const Main = ({
   activeNote, 
@@ -86,17 +88,12 @@ const Main = ({
   }
   return (
     <div className="app-main">
-      <div className="app-main-header">
-        <span className="icon" onClick={handleModeToggle}>
-          { isDarkMode ? (
-              <FontAwesomeIcon icon={faMoon} size="xl"/>
-            ) : (
-              <FontAwesomeIcon icon={faSun} size="xl"/>
-            )
-          }
-        </span>
-        <button onClick={logout}>Logout</button>
-      </div>
+      <Header 
+        logout={logout}
+        isDarkMode={isDarkMode}
+        handleModeToggle={handleModeToggle}
+      />
+
       <div className="app-main-note-edit">
         <input 
           id="title"
@@ -115,9 +112,6 @@ const Main = ({
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
         </div>
-        <button onClick={handleCopy}>
-          1行コピー
-        </button>
       </div>
     </div>
   )
