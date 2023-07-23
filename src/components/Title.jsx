@@ -5,6 +5,7 @@ const Title = ({isDarkMode, activeNote, childTitleRef}) => {
     useEffect(() => {
         if(activeNote) {
             setLocalTitle(activeNote.title);
+            childTitleRef.current = '';
         } else {
             setLocalTitle('')
         }

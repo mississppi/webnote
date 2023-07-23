@@ -5,6 +5,7 @@ const Content = ({isDarkMode,activeNote,childContentRef}) => {
     useEffect(() => {
       if(activeNote) {
         setLocalContent(activeNote.content);
+      childContentRef.current = '';
       } else {
         setLocalContent('')
       }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
@@ -21,14 +21,6 @@ const Main = ({
   const [isContentFocused, setIsContentFocused] = useState(false);
   const childContentRef = useRef('');
   const childTitleRef = useRef('');
-
-//   useEffect(() => {
-//     if(activeNote) {
-//         setLocalTitle(activeNote.title);
-//     } else {
-//         setLocalTitle('')
-//     }
-// }, [childContentRef])
 
   const handleSave = () => {
     event.preventDefault();
@@ -98,18 +90,18 @@ const Main = ({
   //localstateの取得
   const handlegetStateButton = () => {
 
-    //contentを取得
-    const childState = childContentRef.current;
-    const childTitle = childTitleRef.current;
-
-    if(childState) {
-      activeNote.content = childState;
+    //refローカルから取得
+    if(childContentRef.current) {
+      activeNote.content = childContentRef.current;
     }
 
-    if(childTitle) {
-      activeNote.title = childTitle;
+    if(childTitleRef.current) {
+      activeNote.title = childTitleRef.current;
     }
 
+    //保存しないまま別のnoteを選択するとrefが解放されていない
+
+    //updateする
     if(activeNote){
       onUpdateNote();
     }
@@ -142,6 +134,10 @@ const Main = ({
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
         </div>
+
+        <button onClick={handlegetStateButton}>
+          保存
+        </button>
       </div>
     </div>
   )
