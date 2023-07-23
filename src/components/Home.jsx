@@ -151,6 +151,7 @@ const Home = () => {
     });
   }
 
+
   if(!user) {
     navigate("/login");
   } else {
@@ -162,7 +163,6 @@ const Home = () => {
           onDeleteNote={onDeleteNote} 
           activeNote={activeNote} 
           onActiveNote={handleNoteActive}
-
         />
         <Main 
           activeNote={activeNote}
