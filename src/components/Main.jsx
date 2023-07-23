@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
 import {useKey} from 'react-use';
 import './Main.css'
 import Header from './Header';
+import Content from './Content';
+import Title from './Title';
 
 const Main = ({
   activeNote, 
@@ -17,6 +19,16 @@ const Main = ({
   }) => {
 
   const [isContentFocused, setIsContentFocused] = useState(false);
+  const childContentRef = useRef('');
+  const childTitleRef = useRef('');
+
+//   useEffect(() => {
+//     if(activeNote) {
+//         setLocalTitle(activeNote.title);
+//     } else {
+//         setLocalTitle('')
+//     }
+// }, [childContentRef])
 
   const handleSave = () => {
     event.preventDefault();
@@ -83,9 +95,32 @@ const Main = ({
     setIsContentFocused(false);
   }
 
+  //localstateの取得
+  const handlegetStateButton = () => {
+
+    //contentを取得
+    const childState = childContentRef.current;
+    const childTitle = childTitleRef.current;
+
+    if(childState) {
+      activeNote.content = childState;
+    }
+
+    if(childTitle) {
+      activeNote.title = childTitle;
+    }
+
+    if(activeNote){
+      onUpdateNote();
+    }
+    console.log("updated!!!");
+
+  }
+  
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
   }
+  
   return (
     <div className="app-main">
       <Header 
@@ -93,21 +128,16 @@ const Main = ({
         isDarkMode={isDarkMode}
         handleModeToggle={handleModeToggle}
       />
-
       <div className="app-main-note-edit">
-        <input 
-          id="title"
-          className={`${isDarkMode ? "darkmode" : ""}`}
-          type="text" 
-          value={activeNote?.title || ""}
-          onChange={onInputChange}
+        <Title 
+          isDarkMode={isDarkMode}
+          activeNote={activeNote}
+          childTitleRef={childTitleRef}
         />
-        <textarea 
-          id="content"
-          className={`${isDarkMode ? "darkmode" : ""}`}
-          value={activeNote?.content || ""}
-          onChange={onTextAreaChange}
-          onFocus={handleContentFocus} onBlur={handleContentBlur}
+        <Content 
+          isDarkMode={isDarkMode}
+          activeNote={activeNote}
+          childContentRef={childContentRef}
         />
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
