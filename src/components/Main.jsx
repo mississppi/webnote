@@ -19,11 +19,19 @@ const Main = ({
   }) => {
 
   const [isContentFocused, setIsContentFocused] = useState(false);
+  const [isTitleEdited, setIsTitleEdited] = useState(false);
+  const [isContentEdited,setIsContentEdited] = useState(false);
   const childContentRef = useRef('');
   const childTitleRef = useRef('');
 
   const handleSave = () => {
     event.preventDefault();
+    if(isTitleEdited){
+      activeNote.title = childTitleRef.current;
+    }
+    if(isContentEdited){
+      activeNote.content = childContentRef.current;
+    }
     if(activeNote){
       onUpdateNote();
     }
@@ -31,48 +39,43 @@ const Main = ({
   const saveKey = (event) => event.key === 's' && event.metaKey;
   useKey(saveKey, handleSave);
 
-
+  //1行コピーをします
   const handleCopy = (event) => {
     if(isContentFocused) {
-
-      // これでコピーは止められる
       event.preventDefault();
 
-      //cmd + c をしたキャレット位置を取得
+      //キャレット位置を取得
       const currentCaret = event.target.selectionStart;
 
-      //jsでstartとend取得
-      //文字列
+      //キャレット位置からstartとend取得
+      //編集中文字列も取得
       const text = event.target.value;
       const start = text.lastIndexOf('\n', currentCaret - 1) + 1;
       const end = text.indexOf('\n', currentCaret);
       const previous = text.charAt(currentCaret - 1);
 
-      //一致してかつ前の文字が改行コードじゃなければ
+      // 現在位置が末尾かつ1文字前が改行コードの場合、全コピーされてしまうためreturn
       // const previous = text.charAt(currentCaret - 1);
       if (currentCaret == text.length){
         if(previous == '\n'){
-          console.log('こんなことしてちゃだめだ！');
           return;
         }
       }
-
+      //範囲選択
       event.target.setSelectionRange(start, end === -1 ? text.length : end);
       const selectedText = event.target.value.substring(start, end);
-      //copy
+
       navigator.clipboard.writeText(selectedText)
       .then(() => {
-        console.log("copieeeddd");
+        //キャレットをもとに位置に戻す
         event.target.setSelectionRange(currentCaret, currentCaret);
         return;
       })
       .catch((error) => {
-        console.log("osietetet");
+        console.log("copy error", error);
       })
 
     }
-    // console.log("copyyy");
-    // console.log(isContentFocused);
   }
 
   const copyKey = (event) => event.metaKey && event.key === 'c';
@@ -85,28 +88,6 @@ const Main = ({
 
   const handleContentBlur = () => {
     setIsContentFocused(false);
-  }
-
-  //localstateの取得
-  const handlegetStateButton = () => {
-
-    //refローカルから取得
-    if(childContentRef.current) {
-      activeNote.content = childContentRef.current;
-    }
-
-    if(childTitleRef.current) {
-      activeNote.title = childTitleRef.current;
-    }
-
-    //保存しないまま別のnoteを選択するとrefが解放されていない
-
-    //updateする
-    if(activeNote){
-      onUpdateNote();
-    }
-    console.log("updated!!!");
-
   }
   
   if(!activeNote){
@@ -125,19 +106,19 @@ const Main = ({
           isDarkMode={isDarkMode}
           activeNote={activeNote}
           childTitleRef={childTitleRef}
+          setIsTitleEdited={setIsTitleEdited}
         />
         <Content 
           isDarkMode={isDarkMode}
           activeNote={activeNote}
           childContentRef={childContentRef}
+          setIsContentEdited={setIsContentEdited}
+          handleContentFocus={handleContentFocus}
+          handleContentBlur={handleContentBlur}
         />
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
         </div>
-
-        <button onClick={handlegetStateButton}>
-          保存
-        </button>
       </div>
     </div>
   )

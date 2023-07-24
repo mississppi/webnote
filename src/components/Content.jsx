@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-const Content = ({isDarkMode,activeNote,childContentRef}) => {
+const Content = ({isDarkMode,activeNote,childContentRef,setIsContentEdited,handleContentFocus,handleContentBlur}) => {
     const [localContent, setLocalContent] = useState("");
     useEffect(() => {
       if(activeNote) {
         setLocalContent(activeNote.content);
-      childContentRef.current = '';
+        setIsContentEdited(false);
+        childContentRef.current = '';
       } else {
         setLocalContent('')
       }
@@ -13,6 +14,7 @@ const Content = ({isDarkMode,activeNote,childContentRef}) => {
 
     const handleChangeContent = (e) => {
       setLocalContent(e.target.value);
+      setIsContentEdited(true);
       childContentRef.current = e.target.value;
     }
     return (
@@ -22,7 +24,8 @@ const Content = ({isDarkMode,activeNote,childContentRef}) => {
             className={`${isDarkMode ? "darkmode" : ""}`}
             value={localContent}
             onChange={handleChangeContent}
-          //   onFocus={handleContentFocus} onBlur={handleContentBlur}
+            onFocus={handleContentFocus} 
+            onBlur={handleContentBlur}
           />
       </div>
     )
