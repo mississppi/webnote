@@ -1,7 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
-
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
+import React, { useState, useRef} from 'react'
 import {useKey} from 'react-use';
 import './Main.css'
 import Header from './Header';
@@ -10,86 +7,45 @@ import Title from './Title';
 
 const Main = ({
   activeNote, 
-  onInputChange, 
-  onTextAreaChange, 
   onUpdateNote, 
   logout, 
   isDarkMode, 
   handleModeToggle, 
   }) => {
 
-  const [isContentFocused, setIsContentFocused] = useState(false);
+  //タイトルとコンテンツの変更を管理するState
   const [isTitleEdited, setIsTitleEdited] = useState(false);
   const [isContentEdited,setIsContentEdited] = useState(false);
+
+  // 子コンポーネントへの参照を作成
   const childContentRef = useRef('');
   const childTitleRef = useRef('');
 
+  //キーボードショートカットで保存する関数を定義
   const handleSave = () => {
     event.preventDefault();
+
+    //タイトルが変更されている場合は、activeNoteのtitleを更新
     if(isTitleEdited){
       activeNote.title = childTitleRef.current;
     }
+
+    ///コンテンツが変更されている場合は、activeNoteのcontentを更新
     if(isContentEdited){
       activeNote.content = childContentRef.current;
     }
+
+    //ノートが選択されている場合は更新を実行
     if(activeNote){
       onUpdateNote();
     }
   }
+
+  // ⌘ + s キーで保存するためのハンドラ設定
   const saveKey = (event) => event.key === 's' && event.metaKey;
   useKey(saveKey, handleSave);
 
-  //1行コピーをします
-  const handleCopy = (event) => {
-    if(isContentFocused) {
-      event.preventDefault();
-
-      //キャレット位置を取得
-      const currentCaret = event.target.selectionStart;
-
-      //キャレット位置からstartとend取得
-      //編集中文字列も取得
-      const text = event.target.value;
-      const start = text.lastIndexOf('\n', currentCaret - 1) + 1;
-      const end = text.indexOf('\n', currentCaret);
-      const previous = text.charAt(currentCaret - 1);
-
-      // 現在位置が末尾かつ1文字前が改行コードの場合、全コピーされてしまうためreturn
-      // const previous = text.charAt(currentCaret - 1);
-      if (currentCaret == text.length){
-        if(previous == '\n'){
-          return;
-        }
-      }
-      //範囲選択
-      event.target.setSelectionRange(start, end === -1 ? text.length : end);
-      const selectedText = event.target.value.substring(start, end);
-
-      navigator.clipboard.writeText(selectedText)
-      .then(() => {
-        //キャレットをもとに位置に戻す
-        event.target.setSelectionRange(currentCaret, currentCaret);
-        return;
-      })
-      .catch((error) => {
-        console.log("copy error", error);
-      })
-
-    }
-  }
-
-  const copyKey = (event) => event.metaKey && event.key === 'c';
-  useKey(copyKey, handleCopy);
-
-
-  const handleContentFocus = () => {
-    setIsContentFocused(true);
-  }
-
-  const handleContentBlur = () => {
-    setIsContentFocused(false);
-  }
-  
+  // actiteNoteが無い場合は、選択するようメッセージ表示
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
   }
@@ -113,8 +69,6 @@ const Main = ({
           activeNote={activeNote}
           childContentRef={childContentRef}
           setIsContentEdited={setIsContentEdited}
-          handleContentFocus={handleContentFocus}
-          handleContentBlur={handleContentBlur}
         />
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
