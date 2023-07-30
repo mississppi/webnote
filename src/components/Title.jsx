@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
-const Title = ({isDarkMode, activeNote, childTitleRef}) => {
+const Title = ({isDarkMode, activeNote, childTitleRef, setIsTitleEdited}) => {
     const [localTitle, setLocalTitle] = useState("");
     useEffect(() => {
         if(activeNote) {
             setLocalTitle(activeNote.title);
+            setIsTitleEdited(false);
             childTitleRef.current = '';
         } else {
             setLocalTitle('')
@@ -13,6 +14,7 @@ const Title = ({isDarkMode, activeNote, childTitleRef}) => {
 
     const handleChangeTitle = (e) => {
         setLocalTitle(e.target.value);
+        setIsTitleEdited(true);
         childTitleRef.current = e.target.value;
     }
 

@@ -1,7 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
-
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons'
+import React, { useState, useRef} from 'react'
 import {useKey} from 'react-use';
 import './Main.css'
 import Header from './Header';
@@ -10,105 +7,45 @@ import Title from './Title';
 
 const Main = ({
   activeNote, 
-  onInputChange, 
-  onTextAreaChange, 
   onUpdateNote, 
   logout, 
   isDarkMode, 
   handleModeToggle, 
   }) => {
 
-  const [isContentFocused, setIsContentFocused] = useState(false);
+  //タイトルとコンテンツの変更を管理するState
+  const [isTitleEdited, setIsTitleEdited] = useState(false);
+  const [isContentEdited,setIsContentEdited] = useState(false);
+
+  // 子コンポーネントへの参照を作成
   const childContentRef = useRef('');
   const childTitleRef = useRef('');
 
+  //キーボードショートカットで保存する関数を定義
   const handleSave = () => {
     event.preventDefault();
-    if(activeNote){
-      onUpdateNote();
-    }
-  }
-  const saveKey = (event) => event.key === 's' && event.metaKey;
-  useKey(saveKey, handleSave);
 
-
-  const handleCopy = (event) => {
-    if(isContentFocused) {
-
-      // これでコピーは止められる
-      event.preventDefault();
-
-      //cmd + c をしたキャレット位置を取得
-      const currentCaret = event.target.selectionStart;
-
-      //jsでstartとend取得
-      //文字列
-      const text = event.target.value;
-      const start = text.lastIndexOf('\n', currentCaret - 1) + 1;
-      const end = text.indexOf('\n', currentCaret);
-      const previous = text.charAt(currentCaret - 1);
-
-      //一致してかつ前の文字が改行コードじゃなければ
-      // const previous = text.charAt(currentCaret - 1);
-      if (currentCaret == text.length){
-        if(previous == '\n'){
-          console.log('こんなことしてちゃだめだ！');
-          return;
-        }
-      }
-
-      event.target.setSelectionRange(start, end === -1 ? text.length : end);
-      const selectedText = event.target.value.substring(start, end);
-      //copy
-      navigator.clipboard.writeText(selectedText)
-      .then(() => {
-        console.log("copieeeddd");
-        event.target.setSelectionRange(currentCaret, currentCaret);
-        return;
-      })
-      .catch((error) => {
-        console.log("osietetet");
-      })
-
-    }
-    // console.log("copyyy");
-    // console.log(isContentFocused);
-  }
-
-  const copyKey = (event) => event.metaKey && event.key === 'c';
-  useKey(copyKey, handleCopy);
-
-
-  const handleContentFocus = () => {
-    setIsContentFocused(true);
-  }
-
-  const handleContentBlur = () => {
-    setIsContentFocused(false);
-  }
-
-  //localstateの取得
-  const handlegetStateButton = () => {
-
-    //refローカルから取得
-    if(childContentRef.current) {
-      activeNote.content = childContentRef.current;
-    }
-
-    if(childTitleRef.current) {
+    //タイトルが変更されている場合は、activeNoteのtitleを更新
+    if(isTitleEdited){
       activeNote.title = childTitleRef.current;
     }
 
-    //保存しないまま別のnoteを選択するとrefが解放されていない
+    ///コンテンツが変更されている場合は、activeNoteのcontentを更新
+    if(isContentEdited){
+      activeNote.content = childContentRef.current;
+    }
 
-    //updateする
+    //ノートが選択されている場合は更新を実行
     if(activeNote){
       onUpdateNote();
     }
-    console.log("updated!!!");
-
   }
-  
+
+  // ⌘ + s キーで保存するためのハンドラ設定
+  const saveKey = (event) => event.key === 's' && event.metaKey;
+  useKey(saveKey, handleSave);
+
+  // actiteNoteが無い場合は、選択するようメッセージ表示
   if(!activeNote){
     return <div className='no-active-note'>ノートを選んでね</div>
   }
@@ -125,19 +62,17 @@ const Main = ({
           isDarkMode={isDarkMode}
           activeNote={activeNote}
           childTitleRef={childTitleRef}
+          setIsTitleEdited={setIsTitleEdited}
         />
         <Content 
           isDarkMode={isDarkMode}
           activeNote={activeNote}
           childContentRef={childContentRef}
+          setIsContentEdited={setIsContentEdited}
         />
         <div className='app-main-help'>
           <span className='save'>SAVE = ⌘ + s</span>
         </div>
-
-        <button onClick={handlegetStateButton}>
-          保存
-        </button>
       </div>
     </div>
   )

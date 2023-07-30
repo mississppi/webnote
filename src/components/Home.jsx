@@ -18,7 +18,6 @@ const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [viewToggle, setViewToggle] = useState(false);
   const [showState, setShowState] = useState(false);
-
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -150,7 +149,6 @@ const Home = () => {
       console.log(error);
     });
   }
-
 
   if(!user) {
     navigate("/login");
