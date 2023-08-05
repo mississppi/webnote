@@ -1,6 +1,6 @@
 import { signInWithPopup, signInAnonymously } from 'firebase/auth'
 import React from 'react'
-import { auth, provider } from '../firebase';
+import { auth, provider } from '../api/firebase';
 import { useNavigate } from 'react-router-dom';
 import btn_google from "../assets/btn_google_signin_light_normal_web.png"
 import "./Login.css";

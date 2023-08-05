@@ -4,11 +4,12 @@ import Navi from './Navi'
 import Main from './Main'
 import uuid from 'react-uuid';
 import Notification from './Notification';
-import { auth, db } from '../firebase'
+import { auth, db } from '../api/firebase'
 import {doc, addDoc, collection, deleteDoc, getDocs, query, where, updateDoc} from "firebase/firestore"
 import { useAuthContext } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
+import { addNewNote, deleteNote, fetchNotesByUid, updateNote } from '../api/api';
 
 const Home = () => {
   const { user } = useAuthContext();
@@ -42,24 +43,6 @@ const Home = () => {
     localStorage.setItem('isDarkMode', JSON.stringify(!isDarkMode));
   }
 
-  const fetchDocumentId = async (id) => {
-    const q = query(collection(db, "notes"), where("id", "==", id));
-    const querySnapshot = await getDocs(q);
-    const doc_id = querySnapshot.docs.map((doc) => {
-      return doc.id;
-    })
-    return doc_id;
-  }
-
-  const fetchNotesByUid = async (uid) => {
-    const q = query(collection(db, "notes"), where("uid", "==", uid));
-    const querySnapshot = await getDocs(q); 
-    const notesArray = querySnapshot.docs.map((doc) => {
-      return doc.data();
-    })
-    return notesArray;
-  }
-
   const onAddNote = async () => {
     try {
       if(user.email == null){
@@ -78,7 +61,7 @@ const Home = () => {
         modDate: Date.now(),
         uid: user.uid,
       };
-      const docRef = await addDoc(collection(db, "notes"), newNote);
+      const docRef = addNewNote(newNote);
       setNotes([...notes, newNote]);
     } catch(error) {
       console.log(error);
@@ -87,10 +70,8 @@ const Home = () => {
 
   const onDeleteNote = async (id) => {
     try {
-      const doc_id = await fetchDocumentId(id);
-      await deleteDoc(doc(db, 'notes', doc_id[0])).
-      then(() => {
-        console.log("deleted");
+      const isDeleted = await deleteNote(id);
+      if (isDeleted) {
         const filterNotes = notes.filter((note) => note.id !== id);
         if(filterNotes.length != 0){
           setActiveNote(filterNotes[0]);
@@ -98,11 +79,7 @@ const Home = () => {
           setActiveNote(null);
         }
         setNotes(filterNotes);
-      }).
-      catch((error) => {
-        console.log(error);
-      });
-
+      }
     } catch(error) {
       console.log(error);
     }
@@ -110,15 +87,15 @@ const Home = () => {
 
   const onUpdateNote = async () => {
     try {
-      const doc_id = await fetchDocumentId(activeNote.id);
-      const documentRef = doc(db, 'notes', doc_id[0]);
-      const updatedNote = { 
-        title: activeNote.title,
-        content: activeNote.content,
-      };
-      await updateDoc(documentRef, updatedNote);
-      const notesArray = await fetchNotesByUid(user.uid);
-      setNotes(notesArray);
+      const isUpdated = updateNote(
+        activeNote.id,
+        activeNote.title,
+        activeNote.content,
+      );
+      if(isUpdated) {
+        const notesArray = await fetchNotesByUid(user.uid);
+        setNotes(notesArray);
+      }
     } catch(error) {
       console.log(error);
     }
